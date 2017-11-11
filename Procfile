@@ -1,0 +1,1 @@
+worker: python aya.py
