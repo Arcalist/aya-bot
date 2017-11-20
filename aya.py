@@ -42,6 +42,8 @@ async def on_message(message):
 			if help != link:
 				await client.send_message(channel, title_help)
 				await client.send_message(channel, link.get("href"))
+				channel = client.get_channel('255758512632627200')
+				await client.send_message(channel, 'Check')
 
 			await asyncio.sleep(60)
 
