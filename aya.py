@@ -42,9 +42,8 @@ async def on_message(message):
 			if help != link:
 				await client.send_message(channel, title_help)
 				await client.send_message(channel, link.get("href"))
-				message.content = link
 
-			await asyncio.sleep(600)
+			await asyncio.sleep(60)
 
 
 client.run("Mzc5MDAyNDgwOTM3NDAyMzY4.DOjyhw.w0QsBBsIwAFxyW40odpZwUjs9ZY")
