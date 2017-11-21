@@ -20,23 +20,31 @@ async def on_ready():
 	print('------')
 	admin_channel = client.get_channel('255758512632627200')
 	await client.send_message(admin_channel, 'Initalize Aya.exe')
+	channel = client.get_channel('360042247770734593')
+	now = datetime.datetime.now()
+	log = client.logs_from(channel, limit=1, before=now)
+	async for message in log:
+		await client.send_message(admin_channel, message.content)
+		help = message.content
+	"""help = "tak"""
 	while True:
 		
-		channel = client.get_channel('360042247770734593')
+		
 		wiki = "http://www.mynintendo.pl/"
 		page = urlopen(wiki)
 		soup = BeautifulSoup(page)
 		now = datetime.datetime.now()
-		logs = client.logs_from('360042247770734593', limit=1, before=now)
+		
 		title_help = soup.h2.string
-		link = soup.find(title=title_help)
+		link = soup.find(title=title_help).get("href")
 		
 			
-		if help != link:
+		if help == link:
+			await client.send_message(admin_channel, now)
+		else:
 			await client.send_message(channel, title_help)
-			await client.send_message(channel, link.get("href"))
+			await client.send_message(channel, link)
 			help = link
-		await client.send_message(admin_channel, now)
 		await asyncio.sleep(60)
 
 
