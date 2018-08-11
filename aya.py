@@ -28,7 +28,7 @@ async def on_ready():
 	print('------')
     
 	admin_channel = client.get_channel('255758512632627200')
-	await client.send_message(admin_channel, 'Initalize Aya.exe)
+	await client.send_message(admin_channel, 'Initalize Aya.exe')
 	channel = client.get_channel('360042247770734593')
 	lowcy_pc, lowcy_switch, lowcy_ps4 = client.get_channel('373841364053655573'), client.get_channel('477817276368683021'), client.get_channel('477817309067739157')
 	while True:
