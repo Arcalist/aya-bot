@@ -38,7 +38,7 @@ async def on_ready():
 			soup = BeautifulSoup(url)
 			link = soup.h2.a.get("href")
 
-			cur.execute("SELECT * FROM news where link = %s", (link,))   
+			cur.execute("SELECT * FROM news where link = %s and platform = %s", (link,category))   
 			#print(cur.fetchone())
 			if cur.fetchone() is None:
 				if "lowcy" in category:
