@@ -26,7 +26,7 @@ async def on_ready():
 	print('Logged in as')
 	print(client.user.id)
 	print('------')
-    
+	
 	admin_channel = client.get_channel('255758512632627200')
 	await client.send_message(admin_channel, 'Initalize Aya.exe')
 	channel = client.get_channel('360042247770734593')
@@ -42,12 +42,12 @@ async def on_ready():
 			#print(cur.fetchone())
 			if cur.fetchone() is None:
 				if "lowcy" in category:
-                    if "ps4" in category:
-                        await client.send_message(lowcy_ps4, link)
-                    elif "pc" in category:
-                        await client.send_message(lowcy_pc, link)
-                    else:
-                        await client.send_message(lowcy_switch, link)
+					if "ps4" in category:
+						await client.send_message(lowcy_ps4, link)
+					elif "pc" in category:
+						await client.send_message(lowcy_pc, link)
+					else:
+						await client.send_message(lowcy_switch, link)
 					
 				else:
 					await client.send_message(channel, link)
