@@ -3,13 +3,21 @@ from bs4 import BeautifulSoup
 from discord.ext import commands
 import discord
 import asyncio
-import datetime
-
+import os
+import psycopg2
 
 desc = "Bunbunmaru arrives"
 prefix = "?"
 
+conn = psycopg2.connect(dbname = "db3qhkvtsi2nu", user = "qyinrlseznzfru", password="e090d984a640d447a4d6eb0d61cd488da690c9f4fc3d34346ff3ce4ef64fe5be", host = "ec2-54-217-250-0.eu-west-1.compute.amazonaws.com", port = 5432, sslmode='require')
+cur = conn.cursor()
 
+pages = {"mynintendo": "https://www.mynintendo.pl/",
+ "lowcyps4": "https://lowcygier.pl/platforma/ps4/",
+ "lowcyswitch": "https://lowcygier.pl/platforma/nintendo-switch/",
+ "lowcypc":"https://lowcygier.pl/platforma/pc/",
+ "switch":"https://www.mynintendo.pl/category/nintendo-switch/",
+ "3ds":"https://www.mynintendo.pl/category/wiadomosci/"}
 
 
 client = commands.Bot(command_prefix = prefix, description = desc)
@@ -21,30 +29,29 @@ async def on_ready():
 	admin_channel = client.get_channel('255758512632627200')
 	await client.send_message(admin_channel, 'Initalize Aya.exe')
 	channel = client.get_channel('360042247770734593')
-	now = datetime.datetime.now()
-	log = client.logs_from(channel, limit=1, before=now)
-	async for message in log:
-		await client.send_message(admin_channel, message.content)
-		help = message.content
-	"""help = "tak"""
+	lowcy_channel = client.get_channel('373841364053655573')
 	while True:
-		
-		
-		wiki = "http://www.mynintendo.pl/"
-		page = urlopen(wiki)
-		soup = BeautifulSoup(page)
-		now = datetime.datetime.now()
-		
-		title_help = soup.h2.string
-		link = soup.find(title=title_help).get("href")
+			
+		for category, page in pages.items():
+			url = urlopen(page)
+			soup = BeautifulSoup(url)
+			link = soup.h2.a.get("href")
+
+			cur.execute("SELECT * FROM news where link = %s", (link,))   
+			#print(cur.fetchone())
+			if cur.fetchone() is None:
+				if "lowcy" in category:
+					await client.send_message(lowcy_channel, link)
+				else:
+					await client.send_message(channel, link)
+				cur.execute("UPDATE news SET link = %s WHERE platform = %s",(link, category))
+				conn.commit()  
+				
+			print(category,link)
+		cur.execute("SELECT * FROM news")
+		print(cur.fetchall())
 		
 			
-		if help == link:
-			await client.send_message(admin_channel, now)
-		else:
-			await client.send_message(channel, title_help)
-			await client.send_message(channel, link)
-			help = link
 		await asyncio.sleep(60)
 
 
