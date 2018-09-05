@@ -9,7 +9,8 @@ import psycopg2
 desc = "Bunbunmaru arrives"
 prefix = "?"
 
-conn = psycopg2.connect(dbname = "db3qhkvtsi2nu", user = "qyinrlseznzfru", password="e090d984a640d447a4d6eb0d61cd488da690c9f4fc3d34346ff3ce4ef64fe5be", host = "ec2-54-217-250-0.eu-west-1.compute.amazonaws.com", port = 5432, sslmode='require')
+DATABASE_URL = os.environ['DATABASE_URL']
+conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 cur = conn.cursor()
 
 pages = {"mynintendo": "https://www.mynintendo.pl/",
