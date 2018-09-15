@@ -70,5 +70,5 @@ async def on_ready():
 		await asyncio.sleep(60)
 
 
-client.run(token)
+client.run(''.join(token))
 
