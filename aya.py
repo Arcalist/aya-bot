@@ -41,6 +41,8 @@ async def on_ready():
 			url = urlopen(page)
 			soup = BeautifulSoup(url)
 			link = soup.h2.a.get("href")
+			if link == "https://lowcygier.pl/polecane/":
+						link = soup.h2.find("a", {"class": "post-title-text"}).get("href")
 			if "lowcy" in category:
 				cur.execute("SELECT * FROM news where link = %s and platform = %s", (link,category))   
 			else:
@@ -48,8 +50,6 @@ async def on_ready():
 			#print(cur.fetchone())
 			if cur.fetchone() is None:
 				if "lowcy" in category:
-					if link == "https://lowcygier.pl/polecane/":
-						link = soup.h2.find("a", {"class": "post-title-text"}).get("href")
 					if "ps4" in category:
 						await client.send_message(lowcy_ps4, link)
 					elif "pc" in category:
