@@ -12,6 +12,9 @@ prefix = "?"
 DATABASE_URL = os.environ['DATABASE_URL']
 conn = psycopg2.connect(DATABASE_URL, sslmode='require')
 cur = conn.cursor()
+cur.execute("SELECT * FROM token")
+token = cur.fetchone()
+
 
 pages = {"mynintendo": "https://www.mynintendo.pl/",
  "lowcyps4": "https://lowcygier.pl/platforma/ps4/",
@@ -45,6 +48,8 @@ async def on_ready():
 			#print(cur.fetchone())
 			if cur.fetchone() is None:
 				if "lowcy" in category:
+					if link == "https://lowcygier.pl/polecane/":
+						link = soup.h2.find("a", {"class": "post-title-text"}).get("href")
 					if "ps4" in category:
 						await client.send_message(lowcy_ps4, link)
 					elif "pc" in category:
@@ -65,5 +70,5 @@ async def on_ready():
 		await asyncio.sleep(60)
 
 
-client.run("Mzc5MDAyNDgwOTM3NDAyMzY4.DOjyhw.w0QsBBsIwAFxyW40odpZwUjs9ZY")
+client.run(token)
 
