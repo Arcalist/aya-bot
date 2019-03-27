@@ -85,10 +85,8 @@ async def on_message(message):
     if message.content.startswith('aya track'):
         msg = message.content.lower().split()
         if len(msg) == 3 and msg[2] in ['lowcypc', 'lowcyswitch', 'lowcyps4', 'mynintendo']:
-            if cur.execute('INSERT INTO channels VALUES(%s, %s)', (str(message.channel.id), msg[2])):
-                await client.send_message(message.channel, "Pomyślnie dodano do śledzenia")
-            else:
-                await client.send_message(message.channel, "Ayaya! Coś poszło nie tak")
+            cur.execute('INSERT INTO channels VALUES(%s, %s)', (str(message.channel.id), msg[2])):
+            await client.send_message(message.channel, "Pomyślnie dodano do śledzenia (może)")
         else:
             await client.send_message(message.channel, "Niestety nie mogę śledzić tej strony")
 
