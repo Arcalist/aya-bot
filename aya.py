@@ -35,8 +35,6 @@ async def on_ready():
 
 async def check_pages():
     await client.wait_until_ready()
-    admin_channel = client.get_channel('255758512632627200')
-    await client.send_message(admin_channel, 'Initalize Aya.exe')
     while not client.is_closed:
 
         for category, page in pages.items():
@@ -82,17 +80,24 @@ async def check_pages():
 
 @client.event
 async def on_message(message):
-    if message.content.startswith('aya track'):
-        msg = message.content.lower().split()
-        if len(msg) == 3 and msg[2] in ['lowcypc', 'lowcyswitch', 'lowcyps4', 'mynintendo']:
-            cur.execute('INSERT INTO channels VALUES(%s, %s)', (str(message.channel.id), msg[2]))
-            try:
-                conn.commit()
-                await client.send_message(message.channel, "Pomyślnie dodano do śledzenia (może)")
-            except:
-                await client.send_message(message.channel, "Ayaya! Coś poszło nie tak")
-        else:
-            await client.send_message(message.channel, "Niestety nie mogę śledzić tej strony")
+    if message.channel.id == message.author.id:
+        await client.send_message(message.channel, "Nie obsługuję privów")
+    else:
+        if message.content.startswith('aya track'):
+            msg = message.content.lower().split()
+            if len(msg) == 3 and msg[2] in ['lowcypc', 'lowcyswitch', 'lowcyps4', 'mynintendo']:
+                cur.execute('INSERT INTO channels VALUES(%s, %s)', (str(message.channel.id), msg[2]))
+                try:
+                    conn.commit()
+                    await client.send_message(message.channel, "Pomyślnie dodano do śledzenia (może)")
+                except:
+                    await client.send_message(message.channel, "Ayaya! Coś poszło nie tak")
+            else:
+                await client.send_message(message.channel, "Niestety nie mogę śledzić tej strony")
+        if message.content.startswith('aya unsub'):
+            cur.execute('DELETE FROM channels WHERE channel = (%s)', (str(message.channel.id),))
+            conn.commit()
+            await client.send_message(message.channel, "Pomyślnie usunięto kanał z powiadomień")
 
 client.loop.create_task(check_pages())
 client.run(''.join(token))
