@@ -67,7 +67,7 @@ async def on_message(message):
         await client.send_message(message.channel, "Pomyślnie usunięto kanał z powiadomień")
     if message.content == 'aya help':
         embed = discord.Embed(title="Szybka pomoc do Ayi", colour=discord.Colour(0x1))
-        embed.add_field(name="aya help", value="Wyświetla tą komendę")
+        embed.add_field(name="aya help", value="Wyświetla tę komendę")
         embed.add_field(name="aya track 'platforma'", value="Dodaje obecny kanał do wysyłania wiadomości dotyczącej danej platformy\nMożliwe platformy:\nlowcyps4 - lowcygier.pl kategoria z promocjami dotyczące ps4\nlowcyswitch - lowcygier.pl kategoria z promocjami dotycące switcha\nlowcypc - lowcygier.pl kategoria z promocjami dotyczące\nmynintendo - newsy z mynintendo.pl")
         embed.add_field(name="aya unsub", value="Usuwa wszystkie śledzenia z tego kanału")
 
