@@ -62,8 +62,8 @@ async def check_pages():
 
             f = "%Y-%m-%d %H:%M:%S"
             t_stamp = datetime.strptime(article['created_at'], f)
-            #most_recent_stamp = time.strptime(''.join(most_recent), f)
-            print(t_stamp, most_recent_stamp, t_stamp > most_recent_stamp[0])
+            most_recent_stamp = datetime.strptime(''.join(most_recent), f)
+            print(t_stamp, most_recent_stamp, t_stamp > most_recent_stamp)
             if t_stamp > most_recent_stamp:
                 cur.execute("INSERT INTO gamehag VALUES(TIMESTAMP %s)", (article['created_at'], ))
                 conn.commit()
