@@ -58,12 +58,12 @@ async def check_pages():
 
         if cur.fetchone() is None:
             cur.execute("Select * FROM gamehag ORDER BY timestamp DESC limit 1")
-            most_recent_stamp = cur.fetchone()
+            most_recent_stamp = cur.fetchall()
 
             f = "%Y-%m-%d %H:%M:%S"
             t_stamp = datetime.strptime(article['created_at'], f)
             #most_recent_stamp = time.strptime(''.join(most_recent), f)
-            print(t_stamp, most_recent_stamp, t_stamp > most_recent_stamp)
+            print(t_stamp, most_recent_stamp, t_stamp > most_recent_stamp[0])
             if t_stamp > most_recent_stamp:
                 cur.execute("INSERT INTO gamehag VALUES(TIMESTAMP %s)", (article['created_at'], ))
                 conn.commit()
