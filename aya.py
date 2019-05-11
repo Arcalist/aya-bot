@@ -4,7 +4,9 @@ import discord
 import asyncio
 import os
 import psycopg2
-
+import requests
+import json
+import time
 
 desc = "Bunbunmaru arrives"
 prefix = "?"
