@@ -67,7 +67,7 @@ async def check_pages():
             if t_stamp > most_recent_stamp[0]:
                 cur.execute("INSERT INTO gamehag VALUES(TIMESTAMP %s)", (article['created_at'], ))
                 conn.commit()
-                await client.send_message(client.get_channel('255758512632627200'), 'https://gamehag.com/pl/artykuly/'+s['url'])#tymczasowe wysyłanie na mój własny kanał
+                await client.send_message(client.get_channel('255758512632627200'), 'https://gamehag.com/pl/artykuly/'+article['url'])#tymczasowe wysyłanie na mój własny kanał
             
         await asyncio.sleep(60)
 
