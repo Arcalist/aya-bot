@@ -1,6 +1,6 @@
 import requests
 import json
-import time
+from datetime import datetime
 import feedparser
 from discord.ext import commands
 import discord
@@ -61,11 +61,11 @@ async def check_pages():
             most_recent_stamp = cur.fetchone()
 
             f = "%Y-%m-%d %H:%M:%S"
-            t_stamp = time.strptime(article['created_at'], f)
+            t_stamp = datetime.strptime(article['created_at'], f)
             #most_recent_stamp = time.strptime(''.join(most_recent), f)
             print(t_stamp, most_recent_stamp, t_stamp > most_recent_stamp)
             if t_stamp > most_recent_stamp:
-                cur.execute("INSERT INTO gamehag VALUES(TIMESTAMP %s)", article['created_at'])
+                cur.execute("INSERT INTO gamehag VALUES(TIMESTAMP %s)", (article['created_at'], ))
                 conn.commit()
                 await client.send_message(client.get_channel('255758512632627200'), 'https://gamehag.com/pl/artykuly/'+s['url'])#tymczasowe wysyłanie na mój własny kanał
             
