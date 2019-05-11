@@ -1,9 +1,11 @@
+from gamehag import *
 import feedparser
 from discord.ext import commands
 import discord
 import asyncio
 import os
 import psycopg2
+
 
 desc = "Bunbunmaru arrives"
 prefix = "?"
@@ -45,6 +47,9 @@ async def check_pages():
                     await client.send_message(client.get_channel(''.join(channel)), link)
                 cur.execute("UPDATE news SET link = %s WHERE platform = %s", (link, category))
                 conn.commit()
+            gh = check_gamehag(cur, conn) 
+            if gh:
+                await client.send_message(client.get_channel('255758512632627200'), gh) #tymczasowo wysyła linki z gamehaga na mój własny kanał
         await asyncio.sleep(60)
 
 
