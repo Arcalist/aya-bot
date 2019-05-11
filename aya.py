@@ -1,12 +1,12 @@
+import requests
+import json
+import time
 import feedparser
 from discord.ext import commands
 import discord
 import asyncio
 import os
 import psycopg2
-import requests
-import json
-import time
 
 desc = "Bunbunmaru arrives"
 prefix = "?"
@@ -48,9 +48,26 @@ async def check_pages():
                     await client.send_message(client.get_channel(''.join(channel)), news.link)
                 cur.execute("UPDATE news SET link = %s WHERE platform = %s", (news.link, category))
                 conn.commit()
-            gh = check_gamehag(cur, conn) 
-            if gh:
-                await client.send_message(client.get_channel('255758512632627200'), gh) #tymczasowo wysyła linki z gamehaga na mój własny kanał
+        #poniżej to obsługa gamehaga
+        response = requests.get('https://gamehag.com/api/v2/news?token=zMoIilzTXnAXXXX')
+        response.encoding = 'utf-8'
+        data = response.json()
+        article = data['collection'][0]
+        cur.execute("SELECT * FROM gamehag WHERE timestamp = %s", (article['created_at'], ))
+
+        if cur.fetchone is None:
+            cur.execute("Select * FROM gamehag ORDER BY timestamp DESC limit 1")
+            most_recent = cur.fetchone()
+
+            f = "%Y-%m-%d %H:%M:%S"
+            t_stamp = time.strptime(article['created_at'], f)
+            most_recent_stamp = time.strptime(''.join(most_recent), f)
+
+            if t_stamp > most_recent_stamp:
+                cur.execute("INSERT INTO gamehag VALUES(%s)", article['created_at'])
+                conn.commit()
+                await client.send_message(client.get_channel('255758512632627200'), 'https://gamehag.com/pl/artykuly/'+s['url'])#tymczasowe wysyłanie na mój własny kanał
+            
         await asyncio.sleep(60)
 
 

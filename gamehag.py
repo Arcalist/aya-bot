@@ -1,17 +1,13 @@
 import requests
 import json
 import time
-def check_gamehag(cur, conn):
-    response = requests.get('https://gamehag.com/api/v2/news?token=zMoIilzTXnAXXXX')
-    response.encoding = 'utf-8'
-    data = response.json()
-    article = data['collection'][0]
+response = requests.get('https://gamehag.com/api/v2/news?token=zMoIilzTXnAXXXX')
+response.encoding = 'utf-8'
+data = response.json()
+article = data['collection'][0]
+cur.execute("SELECT * FROM gamehag WHERE timestamp = %s", (article['created_at'], ))
 
-    cur.execute("SELECT * FROM gamehag WHERE timestamp = %s", (article['created_at'], ))
-
-    if cur.fetchone is not None:
-        return False
-
+if cur.fetchone is None:
     cur.execute("Select * FROM gamehag ORDER BY timestamp DESC limit 1")
     most_recent = cur.fetchone()
 
@@ -22,7 +18,6 @@ def check_gamehag(cur, conn):
     if t_stamp > most_recent_stamp:
         cur.execute("INSERT INTO gamehag VALUES(%s)", article['created_at'])
         conn.commit()
-        return ('https://gamehag.com/pl/artykuly/'+s['url'])
-    else:
-        return False
+        await client.send_message(client.get_channel('255758512632627200'), 'https://gamehag.com/pl/artykuly/'+s['url'])
+
 
