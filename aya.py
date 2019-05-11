@@ -56,7 +56,7 @@ async def check_pages():
         print(article['url'], article['created_at'])
         cur.execute("SELECT * FROM gamehag WHERE timestamp = %s", (article['created_at'], ))
 
-        if cur.fetchone is None:
+        if cur.fetchone() is None:
             cur.execute("Select * FROM gamehag ORDER BY timestamp DESC limit 1")
             most_recent = cur.fetchone()
 
