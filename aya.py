@@ -58,7 +58,7 @@ async def check_pages():
 
         if cur.fetchone() is None:
             cur.execute("Select * FROM gamehag ORDER BY timestamp DESC limit 1")
-            most_recent_stamp = cur.fetchall()
+            most_recent = cur.fetchall()
 
             f = "%Y-%m-%d %H:%M:%S"
             t_stamp = datetime.strptime(article['created_at'], f)
