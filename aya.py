@@ -54,7 +54,7 @@ async def check_pages():
         data = response.json()
         article = data['collection'][0]
         print(article['url'], article['created_at'])
-        cur.execute("SELECT * FROM gamehag WHERE timestamp = %s", (article['created_at'], ))
+        cur.execute("SELECT * FROM gamehag WHERE timestamp = TIMESTAMP %s", (article['created_at'], ))
 
         if cur.fetchone() is None:
             cur.execute("Select * FROM gamehag ORDER BY timestamp DESC limit 1")
@@ -65,7 +65,7 @@ async def check_pages():
             most_recent_stamp = time.strptime(''.join(most_recent), f)
             print(t_stamp, most_recent_stamp, t_stamp > most_recent_stamp)
             if t_stamp > most_recent_stamp:
-                cur.execute("INSERT INTO gamehag VALUES(%s)", article['created_at'])
+                cur.execute("INSERT INTO gamehag VALUES(TIMESTAMP %s)", article['created_at'])
                 conn.commit()
                 await client.send_message(client.get_channel('255758512632627200'), 'https://gamehag.com/pl/artykuly/'+s['url'])#tymczasowe wysyłanie na mój własny kanał
             
