@@ -53,6 +53,7 @@ async def check_pages():
         response.encoding = 'utf-8'
         data = response.json()
         article = data['collection'][0]
+        print(article['url'], article['created_at'])
         cur.execute("SELECT * FROM gamehag WHERE timestamp = %s", (article['created_at'], ))
 
         if cur.fetchone is None:
