@@ -48,6 +48,7 @@ async def check_pages():
                     await client.send_message(client.get_channel(''.join(channel)), news.link)
                 cur.execute("UPDATE news SET link = %s WHERE platform = %s", (news.link, category))
                 conn.commit()
+
         #poniżej to obsługa gamehaga
         response = requests.get('https://gamehag.com/api/v2/news?token=zMoIilzTXnAXXXX')
         response.encoding = 'utf-8'
@@ -67,7 +68,9 @@ async def check_pages():
             if t_stamp > most_recent_stamp[0]:
                 cur.execute("INSERT INTO gamehag VALUES(TIMESTAMP %s)", (article['created_at'], ))
                 conn.commit()
-                await client.send_message(client.get_channel('255758512632627200'), 'https://gamehag.com/pl/artykuly/'+article['url'])#tymczasowe wysyłanie na mój własny kanał
+                cur.execute("SELECT channel FROM channels where category = 'gamehag'")
+                for channel in cur.fetchall():
+                    await client.send_message(client.get_channel(''.join(channel)), 'https://gamehag.com/pl/artykuly/'+article['url'])
             
         await asyncio.sleep(60)
 
@@ -76,7 +79,7 @@ async def check_pages():
 async def on_message(message):
     if message.content.startswith('aya track'):
         msg = message.content.lower().split()
-        if len(msg) == 3 and msg[2] in ['lowcypc', 'lowcyswitch', 'lowcyps4', 'mynintendo']:
+        if len(msg) == 3 and msg[2] in ['lowcypc', 'lowcyswitch', 'lowcyps4', 'mynintendo', 'gamehag']:
             cur.execute('INSERT INTO channels VALUES(%s, %s)', (str(message.channel.id), msg[2]))
             try:
                 conn.commit()
@@ -92,7 +95,7 @@ async def on_message(message):
     if message.content == 'aya help':
         embed = discord.Embed(title="Szybka pomoc do Ayi", colour=discord.Colour(0x1))
         embed.add_field(name="aya help", value="Wyświetla tę komendę")
-        embed.add_field(name="aya track 'platforma'", value="Dodaje obecny kanał do wysyłania wiadomości dotyczącej danej platformy\nMożliwe platformy:\nlowcyps4 - lowcygier.pl kategoria z promocjami dotyczące ps4\nlowcyswitch - lowcygier.pl kategoria z promocjami dotycące switcha\nlowcypc - lowcygier.pl kategoria z promocjami dotyczące\nmynintendo - newsy z mynintendo.pl")
+        embed.add_field(name="aya track 'platforma'", value="Dodaje obecny kanał do wysyłania wiadomości dotyczącej danej platformy\nMożliwe platformy:\nlowcyps4 - lowcygier.pl kategoria z promocjami dotyczące ps4\nlowcyswitch - lowcygier.pl kategoria z promocjami dotycące switcha\nlowcypc - lowcygier.pl kategoria z promocjami dotyczące\nmynintendo - newsy z mynintendo.pl\ngamehag")
         embed.add_field(name="aya unsub", value="Usuwa wszystkie śledzenia z tego kanału")
 
         await client.send_message(message.channel, embed=embed)
