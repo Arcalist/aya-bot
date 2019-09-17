@@ -48,29 +48,6 @@ async def check_pages():
                     await client.send_message(client.get_channel(''.join(channel)), news.link)
                 cur.execute("UPDATE news SET link = %s WHERE platform = %s", (news.link, category))
                 conn.commit()
-
-        #poniżej to obsługa gamehaga
-        response = requests.get('https://gamehag.com/api/v2/news?token=zMoIilzTXnAXXXX')
-        response.encoding = 'utf-8'
-        data = response.json()
-        article = data['collection'][0]
-        print(article['url'], article['created_at'])
-        cur.execute("SELECT * FROM gamehag WHERE timestamp = TIMESTAMP %s", (article['created_at'], ))
-
-        if cur.fetchone() is None:
-            cur.execute("Select * FROM gamehag ORDER BY timestamp DESC limit 1")
-            most_recent_stamp = cur.fetchone()
-
-            f = "%Y-%m-%d %H:%M:%S"
-            t_stamp = datetime.strptime(article['created_at'], f)
-            #most_recent_stamp = datetime.strptime(''.join(most_recent), f)
-            print(t_stamp, most_recent_stamp, most_recent_stamp[0] < t_stamp)
-            if t_stamp > most_recent_stamp[0]:
-                cur.execute("INSERT INTO gamehag VALUES(TIMESTAMP %s)", (article['created_at'], ))
-                conn.commit()
-                cur.execute("SELECT channel FROM channels where category = 'gamehag'")
-                for channel in cur.fetchall():
-                    await client.send_message(client.get_channel(''.join(channel)), 'https://gamehag.com/pl/artykuly/'+article['url'])
             
         await asyncio.sleep(60)
 
@@ -79,7 +56,7 @@ async def check_pages():
 async def on_message(message):
     if message.content.startswith('aya track'):
         msg = message.content.lower().split()
-        if len(msg) == 3 and msg[2] in ['lowcypc', 'lowcyswitch', 'lowcyps4', 'mynintendo', 'gamehag']:
+        if len(msg) == 3 and msg[2] in ['lowcypc', 'lowcyswitch', 'lowcyps4', 'mynintendo']:
             cur.execute('INSERT INTO channels VALUES(%s, %s)', (str(message.channel.id), msg[2]))
             try:
                 conn.commit()
