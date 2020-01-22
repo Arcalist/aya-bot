@@ -49,7 +49,7 @@ async def check_pages():
                         await client.send_message(client.get_channel(''.join(channel)), news.link)
                     cur.execute("UPDATE news SET link = %s WHERE platform = %s", (news.link, category))
                     conn.commit()
-             except BaseException:
+            except BaseException:
                 pass
             
         await asyncio.sleep(60)
