@@ -39,15 +39,18 @@ async def check_pages():
     await client.wait_until_ready()
     while not client.is_closed:
         for category, page in pages.items():
-            news = feedparser.parse(page).entries[0]
-            cur.execute("SELECT * FROM news where link = %s and platform = %s", (news.link, category))
-            # print(cur.fetchone())
-            if cur.fetchone() is None:
-                cur.execute("SELECT channel FROM channels where category = %s", (category, ))
-                for channel in cur.fetchall():
-                    await client.send_message(client.get_channel(''.join(channel)), news.link)
-                cur.execute("UPDATE news SET link = %s WHERE platform = %s", (news.link, category))
-                conn.commit()
+            try:
+                news = feedparser.parse(page).entries[0]
+                cur.execute("SELECT * FROM news where link = %s and platform = %s", (news.link, category))
+                # print(cur.fetchone())
+                if cur.fetchone() is None:
+                    cur.execute("SELECT channel FROM channels where category = %s", (category, ))
+                    for channel in cur.fetchall():
+                        await client.send_message(client.get_channel(''.join(channel)), news.link)
+                    cur.execute("UPDATE news SET link = %s WHERE platform = %s", (news.link, category))
+                    conn.commit()
+             except BaseException:
+                pass
             
         await asyncio.sleep(60)
 
