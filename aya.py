@@ -32,7 +32,7 @@ async def on_ready():
     print('Logged in as')
     print(client.user.id)
     print('------')
-    await client.change_presence(game=discord.Game(name="'aya help' for help"))
+    #await client.change_presence(game=discord.Game(name="'aya help' for help"))
 
 
 async def check_pages():
