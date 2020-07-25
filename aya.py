@@ -24,6 +24,7 @@ pages = {
          "lowcypc": "https://lowcygier.pl/platforma/pc/feed/"
         }
 
+client = discord.Client()
 client = commands.Bot(command_prefix=prefix, description=desc)
 
 
