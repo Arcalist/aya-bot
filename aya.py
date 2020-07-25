@@ -82,6 +82,6 @@ async def on_message(message):
 
 
 client.loop.create_task(check_pages())
-client.run(''.join(token))
+client.run(''.join(token), bot=True, reconnect=True)
 
 
