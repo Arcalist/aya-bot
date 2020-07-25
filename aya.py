@@ -48,8 +48,9 @@ async def check_pages():
         if cur.fetchone() is None:
             cur.execute("SELECT channel FROM channels where category = %s", (category, ))
             for channel in cur.fetchall():
-                print(channel)
+                print(int(channel))
                 await client.send_message(client.get_channel(int(''.join(channel))), news.link)
+                print("SENT")
             cur.execute("UPDATE news SET link = %s WHERE platform = %s", (news.link, category))
             conn.commit()
         #except BaseException:
