@@ -43,7 +43,6 @@ async def check_pages():
             try:
                 news = feedparser.parse(page).entries[0]
                 cur.execute("SELECT * FROM news where link = %s and platform = %s", (news.link, category))
-                print(cur.fetchone())
                 if cur.fetchone() is None:
                     cur.execute("SELECT channel FROM channels where category = %s", (category, ))
                     for channel in cur.fetchall():
