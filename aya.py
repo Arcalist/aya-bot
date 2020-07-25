@@ -40,7 +40,7 @@ async def check_pages():
     print('check pre await')
     await client.wait_until_ready()
     print('check post await')
-    while not client.is_closed:
+    while not client.is_closed():
         for category, page in pages.items():
             #try:
             news = feedparser.parse(page).entries[0]
