@@ -2,7 +2,7 @@ import requests
 import json
 from datetime import datetime
 import feedparser
-from discord.ext import commands
+from discord.ext import tasks, commands
 import discord
 import asyncio
 import os
@@ -35,7 +35,7 @@ async def on_ready():
     print('------')
     #await client.change_presence(game=discord.Game(name="'aya help' for help"))
 
-
+@tasks.loop(minutes=1)
 async def check_pages():
     await client.wait_until_ready()
     while not client.is_closed:
@@ -82,7 +82,7 @@ async def on_message(message):
         await client.send_message(message.channel, embed=embed)
 
 
-client.loop.create_task(check_pages())
+check_pages.start()
 client.run(''.join(token), bot=True, reconnect=True)
 
 
