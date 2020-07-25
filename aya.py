@@ -49,7 +49,7 @@ async def check_pages():
             cur.execute("SELECT channel FROM channels where category = %s", (category, ))
             for channel in cur.fetchall():
                 print(channel)
-                await client.send_message(client.get_channel(''.join(channel)), news.link)
+                await client.send_message(client.get_channel(int(''.join(channel))), news.link)
             cur.execute("UPDATE news SET link = %s WHERE platform = %s", (news.link, category))
             conn.commit()
         #except BaseException:
