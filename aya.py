@@ -21,7 +21,9 @@ pages = {
          "mynintendo": "https://www.mynintendo.pl/feed/",
          "lowcyps4": "https://lowcygier.pl/platforma/ps4/feed/",
          "lowcyswitch": "https://lowcygier.pl/platforma/nintendo-switch/feed/",
-         "lowcypc": "https://lowcygier.pl/platforma/pc/feed/"
+         "lowcypc": "https://lowcygier.pl/platforma/pc/feed/",
+         "lowcyps5": "https://lowcygier.pl/platforma/playstation/playstation-5/feed/",
+         "lowcysprzet": "https://lowcygier.pl/sprzet-gamingowy/feed/"
         }
 
 client = discord.Client()
@@ -60,7 +62,7 @@ async def check_pages():
 async def on_message(message):
     if message.content.startswith('aya track'):
         msg = message.content.lower().split()
-        if len(msg) == 3 and msg[2] in ['lowcypc', 'lowcyswitch', 'lowcyps4', 'mynintendo']:
+        if len(msg) == 3 and msg[2] in ['lowcypc', 'lowcyswitch', 'lowcyps4', 'mynintendo', 'lowcysprzet', 'lowcyps5']:
             cur.execute('INSERT INTO channels VALUES(%s, %s)', (str(message.channel.id), msg[2]))
             try:
                 conn.commit()
